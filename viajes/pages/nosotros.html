@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros</title>
+    <!-- Bootstrap CSS -->
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../assets/css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="..." class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="../assets/images/nosotrosFondo1.jpg" class="d-block w-100" alt="Fondo uno">
+            </div>
+            <div class="carousel-item">
+                <img src="../assets/images/nostrosFondo2.jpg" class="d-block w-100" alt="Fondo dos">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- Mision texto -->
+
+    <div class=" p-5 mision">
+        <h1>Misión</h1>
+        <p>
+            En Dreamtrip, nuestra misión es ser la plataforma de referencia para planificar experiencias de viaje inolvidables y accesibles, sin importar el destino, el tipo de viajero o el presupuesto. Nos dedicamos a conectar a las familias y a los entusiastas de las diversas temáticas de viaje con una vasta selección de destinos populares e internacionales, ofreciendo planes personalizados y precios variados que se adaptan a cada necesidad. Nos comprometemos a brindar herramientas de búsqueda intuitivas, información confiable y un servicio de atención al cliente excepcional, garantizando que cada aventura comience con la confianza y la emoción de un viaje perfectamente planificado.
+        </p>
+    </div>
+
+
+
+    <!-- Vision texto -->
+     <div class=" p-5 vision">
+        <h1>Visión</h1>
+        <p>
+            Nuestra visión en Dreamtrip es ser la chispa que enciende la pasión por viajar en cada persona y familia, inspirándolos a explorar el mundo y a crear recuerdos duraderos. Aspiramos a ser reconocidos globalmente por nuestra diversidad de ofertas, nuestra facilidad de uso y nuestro compromiso con la satisfacción del cliente. Buscamos innovar continuamente en la forma en que las personas descubren y reservan sus viajes, anticipando las tendencias y adaptándonos a las nuevas formas de explorar. Queremos ser el socio de confianza que hace posible cada sueño viajero, desde la escapada familiar perfecta hasta la aventura temática más audaz, conectando culturas y enriqueciendo vidas a través del poder transformador de los viajes.
+        </p>
+
+     </div>
+
+    
+
+
+
+    <!-- Footer include -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Navbar include -->
+     <div id="navbar-placeholder"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="../assets/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JS para incluir navbar y footer -->
+    <script>
+        fetch('../includes/navbar.html')
+            .then(res => res.text())
+            .then(html => document.getElementById('navbar-placeholder').innerHTML = html);
+
+        fetch('../includes/footer.html')
+            .then(res => res.text())
+            .then(html => document.getElementById('footer-placeholder').innerHTML = html);
+    </script>
+
+</body>
+
+</html>

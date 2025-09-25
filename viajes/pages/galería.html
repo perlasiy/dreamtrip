@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Galería de Destinos Asimétrica</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    .card-img {
+      object-fit: cover;
+      height: 250px;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .card-img-overlay {
+      background: rgba(0, 0, 0, 0.4);
+      color: white;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .card-img-overlay h5 {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+
+    .modal-fullscreen {
+      max-width: 100vw;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f8f9fa;
+      padding-right: 0 !important;
+    }
+    
+    .header-title {
+      background: rgba(0, 0, 0, 0.6);
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 5px;
+    }
+    
+    .carousel-item {
+      height: 100vh;
+    }
+    
+    .carousel-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .modal-content {
+      background: transparent;
+      border: none;
+    }
+    
+    .modal-header {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      border: none;
+      padding: 0;
+    }
+    
+    .btn-close {
+      background: white;
+      opacity: 1;
+      padding: 10px;
+      background-size: 60%;
+    }
+    
+    .carousel-control-prev, .carousel-control-next {
+      width: 50px;
+      height: 50px;
+      background-color: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 1;
+    }
+    
+    .carousel-control-prev {
+      left: 20px;
+    }
+    
+    .carousel-control-next {
+      right: 20px;
+    }
+    
+    /* Estilos para el diseño asimétrico */
+    .double-column {
+      grid-column: span 2;
+    }
+    
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+      .double-column {
+        grid-column: span 1;
+      }
+    }
+
+
+   body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff;
+    }
+    .title-small {
+      font-size: 0.8rem;
+      color: #999;
+      text-transform: uppercase;
+    }
+    .feature-icon {
+      font-size: 1.8rem;
+      padding: 10px;
+      border-radius: 50%;
+      background-color: #f0f0f0;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    .offer-section {
+      background-color: #26A59E;
+      color: white;
+      border-radius: 12px;
+      padding: 40px 20px;
+      margin-top: 60px;
+
+    }
+    .form-control::placeholder {
+      color: #999;
+    }
+    .subscribe-btn {
+      background-color: white;
+      color: #007B7F;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 5px;
+    }
+    .subscribe-btn:hover {
+      background-color: #e0f7f7;
+    }
+
+    #tacha{
+        background-color:black ;
+    }
+
+
+  </style>
+
+</head>
+<body>
+
+  <!-- Encabezado -->
+  <div class="text-white text-center py-5 d-flex align-items-center justify-content-center" style="background-image: url('/Viajes/assets/images/encabezado.jpg'); background-size: cover; background-position: center; min-height: 400px;">
+    <div class="header-title">
+      <h1 class="display-4">Descubre Tu Proximo destino</h1>
+   
+    </div>
+  </div>
+
+  <!-- Galería con diseño asimétrico -->
+  <div class="container py-5">
+    <div class="gallery-grid">
+      
+      <!-- Primera fila: 3 países (1 columna cada uno) -->
+      <div class="card overflow-hidden border-0 shadow" data-bs-toggle="modal" data-bs-target="#carouselModal" onclick="loadCarousel('suiza')">
+        <img src="../assets/images/egipto1.jpg" class="card-img" alt="Suiza">
+        <div class="card-img-overlay p-3">
+          <h5 class="card-title m-0">Suiza</h5>
+        </div>
+      </div>
+      
+      <div class="card overflow-hidden border-0 shadow" data-bs-toggle="modal" data-bs-target="#carouselModal" onclick="loadCarousel('japon')">
+        <img src="../assets/images/japon1.jpg" class="card-img" alt="Japón">
+        <div class="card-img-overlay p-3">
+          <h5 class="card-title m-0">Japón</h5>
+        </div>
+      </div>
+      
+      <div class="card overflow-hidden border-0 shadow" data-bs-toggle="modal" data-bs-target="#carouselModal" onclick="loadCarousel('colombia')">
+        <img src="../assets/images/colombia1.jpg" class="card-img" alt="Colombia">
+        <div class="card-img-overlay p-3">
+          <h5 class="card-title m-0">Colombia</h5>
+        </div>
+      </div>
+      
+      <!-- Segunda fila: 2 países (uno de 2 columnas y otro de 1) -->
+      <div class="card overflow-hidden border-0 shadow double-column" data-bs-toggle="modal" data-bs-target="#carouselModal" onclick="loadCarousel('italia')">
+        <img src="../assets/images/italia1.jpg" class="card-img" alt="Italia">
+        <div class="card-img-overlay p-3">
+          <h5 class="card-title m-0">Italia</h5>
+        </div>
+      </div>
+      
+      <div class="card overflow-hidden border-0 shadow" data-bs-toggle="modal" data-bs-target="#carouselModal" onclick="loadCarousel('australia')">
+        <img src="../assets/images/australia1.jpg" class="card-img" alt="Australia">
+        <div class="card-img-overlay p-3">
+          <h5 class="card-title m-0">Australia</h5>
+        </div>
+      </div>
+      
+      <!-- Tercera fila: 2 países (uno de 1 columna y otro de 2) -->
+      <div class="card overflow-hidden border-0 shadow" data-bs-toggle="modal" data-bs-target="#carouselModal" onclick="loadCarousel('egipto')">
+        <img src="../assets/images/egipto1.jpg" class="card-img" alt="Egipto">
+        <div class="card-img-overlay p-3">
+          <h5 class="card-title m-0">Egipto</h5>
+        </div>
+      </div>
+      
+      <div class="card overflow-hidden border-0 shadow double-column" data-bs-toggle="modal" data-bs-target="#carouselModal" onclick="loadCarousel('brasil')">
+        <img src="../assets/images/brasil1.jpg" class="card-img" alt="Brasil">
+        <div class="card-img-overlay p-3">
+          <h5 class="card-title m-0">Brasil</h5>
+        </div>
+      </div>
+      
+      <!-- Cuarta fila: 3 países (1 columna cada uno) -->
+      <div class="card overflow-hidden border-0 shadow" data-bs-toggle="modal" data-bs-target="#carouselModal" onclick="loadCarousel('nueva-zelanda')">
+        <img src="../assets/images/zelanda1.jpg" class="card-img" alt="Nueva Zelanda">
+        <div class="card-img-overlay p-3">
+          <h5 class="card-title m-0">Nueva Zelanda</h5>
+        </div>
+      </div>
+      
+      <div class="card overflow-hidden border-0 shadow" data-bs-toggle="modal" data-bs-target="#carouselModal" onclick="loadCarousel('canada')">
+        <img src="../assets/images/canada1.jpg" class="card-img" alt="Canadá">
+        <div class="card-img-overlay p-3">
+          <h5 class="card-title m-0">Canadá</h5>
+        </div>
+      </div>
+      
+      <div class="card overflow-hidden border-0 shadow" data-bs-toggle="modal" data-bs-target="#carouselModal" onclick="loadCarousel('tailandia')">
+        <img src="../assets/images/tailandia1.jpg" class="card-img" alt="Tailandia">
+        <div class="card-img-overlay p-3">
+          <h5 class="card-title m-0">Tailandia</h5>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Modal con carrusel -->
+  <div class="modal fade" id="carouselModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="tacha" type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0">
+          <div id="carouselDestinos" class="carousel slide h-100" data-bs-ride="carousel">
+            <div class="carousel-inner h-100" id="carouselInner">
+              <!-- Slides se cargan dinámicamente -->
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselDestinos" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselDestinos" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Script para cargar el carrusel -->
+  <script>
+    const destinos = {
+      suiza: [
+        "../assets/images/suiza1.jpg",
+        "../assets/images/suiza2.jpg",
+        "../assets/images/suiza3.jpg"
+      ],
+      japon: [
+        "/Viajes/assets/images/japon2.jpg","/Viajes/assets/images/japon3.jpg", "/Viajes/assets/images/japon2.jpg" ],
+      colombia: [
+        "/Viajes/assets/images/colombia2.jpg",
+        "/Viajes/assets/images/colombia3.jpg",
+        "/Viajes/assets/images/colombia4.jpg"
+      ],
+      italia: [
+        "/Viajes/assets/images/italia2.jpg",
+        "/Viajes/assets/images/italia3.jpg",
+        "/Viajes/assets/images/italia4.jpg"
+      ],
+      australia: [
+        "/Viajes/assets/images/australia2.jpg",
+        "/Viajes/assets/images/australia3.jpg",
+        "/Viajes/assets/images/australia4.jpg"
+      ],
+      egipto: [
+        "/Viajes/assets/images/egipto2.jpg",
+        "/Viajes/assets/images/egipto3.jpg",
+        "/Viajes/assets/images/egipto4.jpg"
+      ],
+      brasil: [
+        "/Viajes/assets/images/brasil2.jpg",
+        "/Viajes/assets/images/brasil3.jpg",
+        "/Viajes/assets/images/brasil4.jpg"
+      ],
+      "nueva-zelanda": [
+        "/Viajes/assets/images/zelanda2.jpg",
+        "/Viajes/assets/images/zelanda3.jpg",
+        "/Viajes/assets/images/zelanda4.jpg"
+      ],
+      canada: [
+        "/Viajes/assets/images/canada2.jpg",
+        "/Viajes/assets/images/canada3.jpg",
+        "/Viajes/assets/images/canada4.jpg"
+      ],
+      tailandia: [
+        "/Viajes/assets/images/tailandia2.jpg",
+        "/Viajes/assets/images/tailandia3.jpg",
+        "/Viajes/assets/images/tailandia4.jpg"
+      ]
+    };
+
+    function loadCarousel(pais) {
+      const slides = destinos[pais] || [];
+      const carouselInner = document.getElementById("carouselInner");
+      carouselInner.innerHTML = "";
+
+      slides.forEach((src, index) => {
+        const active = index === 0 ? "active" : "";
+        const item = `
+          <div class="carousel-item ${active}">
+            <img src="${src}" class="d-block w-100" alt="${pais} ${index + 1}">
+          </div>`;
+        carouselInner.innerHTML += item;
+      });
+    }
+  </script>
+
+
+<div class="container text-center my-5">
+  <div class="title-small">Conoce más</div>
+  <h2 class="fw-bold mt-2">Experimenta el <br> mundo</h2>
+  <p class="text-muted mb-4">
+    Lorem ipsum dolor sit amet consectetur. Sed mollis iaculis felis sed <br> 
+    maecenas bibendum turpis sit.
+  </p>
+
+  <div class="row align-items-center mt-5">
+    <div class="col-md-5">
+      <img src="/Viajes/assets/images/paises.jpg" class="img-fluid" alt="Viajes">
+    </div>
+    <div class="col-md-7">
+      <div class="row g-4">
+        <!-- Viaje de lujo -->
+        <div class="col-md-6 text-start">
+          <div class="feature-icon bg-light text-primary">🏨</div>
+          <h5 class="fw-bold">Viaje de lujo</h5>
+          <p class="text-muted">
+            ✅ Lista de beneficios: <br><br>
+            ✈️ Vuelos en primera clase <br>
+            🏨 Hoteles 5 estrellas <br>
+            🍷 Comidas gourmet
+          </p>
+        </div>
+
+        <!-- Presupuesto asequible -->
+        <div class="col-md-6 text-start">
+          <div class="feature-icon bg-light text-success">💰</div>
+          <h5 class="fw-bold">Presupuesto asequible</h5>
+          <p class="text-muted">
+            📊 “Ahorra hasta un 40%” <br><br>
+            🔁 Opción de planes flexibles o pagos a meses
+          </p>
+        </div>
+
+        <!-- Enfoque personalizado -->
+        <div class="col-md-6 text-start">
+          <div class="feature-icon bg-light text-danger">📅</div>
+          <h5 class="fw-bold">Enfoque personalizado</h5>
+          <p class="text-muted">
+            🧭 Selección de itinerarios según tus intereses (playa, aventura, cultura) <br><br>
+            🤝 Asistencia personalizada 24/7 <br><br>
+            📅 Formulario rápido para armar tu viaje ideal <br><br>
+            💬 Frase clave: "Diseñamos el viaje contigo, no para ti."
+          </p>
+        </div>
+
+        <!-- Guía experimentado -->
+        <div class="col-md-6 text-start">
+          <div class="feature-icon bg-light text-info">🎓</div>
+          <h5 class="fw-bold">Guía experimentado</h5>
+          <p class="text-muted">
+            📖 años de experiencia <br><br>
+            🗺️ Mapita o ruta que recorre el guía <br><br>
+            ⭐ Valoración: "Guía calificado con 4.9/5 por nuestros viajeros"
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sección de ofertas -->
+<div class="container offer-section mt-5">
+  <div class="row align-items-center">
+    <div class="col-md-6 mb-3 mb-md-0">
+      <h3 class="fw-bold">Obten ofertas</h3>
+      <p>Descubre las grandes ofertas que tenemos para ti.</p>
+    </div>
+    <div class="col-md-6">
+      <form class="d-flex">
+        <input type="email" class="form-control me-2" placeholder="Email">
+        <button type="submit" class="subscribe-btn">Suscribete</button>
+      </form>
+    </div>
+  </div>
+</div>
+<br>
+<br>
+
+
+<!-- Footer include -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Navbar include -->
+    <div id="navbar-placeholder"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="../assets/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JS para incluir navbar y footer -->
+    <script>
+        fetch('../includes/navbar.html')
+            .then(res => res.text())
+            .then(html => document.getElementById('navbar-placeholder').innerHTML = html);
+
+        fetch('../includes/footer.html')
+            .then(res => res.text())
+            .then(html => document.getElementById('footer-placeholder').innerHTML = html);
+    </script>
+
+
+
+</body>
+</html>

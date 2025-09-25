@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dreamtrip</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../assets/css/styles.css" rel="stylesheet" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Custom Styles for Cosas Populares Section and Search Bar -->
+    <style>
+        .gallery-container {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 15px 0;
+            margin: 0 auto;
+            max-width: 100%;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+            scrollbar-width: thin; /* For Firefox */
+        }
+        .gallery-container::-webkit-scrollbar {
+            height: 8px; /* For Chrome, Safari */
+        }
+        .gallery-container::-webkit-scrollbar-thumb {
+            background-color: #6B48FF;
+            border-radius: 10px;
+        }
+        .gallery {
+            display: inline-flex;
+            align-items: center;
+        }
+        .gallery .card {
+            width: 200px;
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 15px;
+            transition: transform 0.3s ease;
+        }
+        .gallery .card:hover {
+            transform: scale(1.05);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .modal-image img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+        section.container {
+            position: relative;
+            z-index: 1; /* Ensure sections don't overlap */
+        }
+        .destino-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+        /* Search Bar Styles */
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            z-index: 10;
+        }
+        .search-form {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+        }
+        .search-box {
+            display: flex;
+            width: 100%;
+            background: #fff;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .search-input {
+            flex: 1;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            outline: none;
+            border-radius: 50px 0 0 50px;
+            background: #f8f9fa;
+            color: #333;
+        }
+        .search-input::placeholder {
+            color: #6c757d;
+            opacity: 0.7;
+        }
+        .search-button {
+            border: none;
+            background: #6B48FF;
+            color: #fff;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 0 50px 50px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s ease;
+        }
+        .search-button:hover {
+            background: #5a3ecc;
+        }
+        .search-button i {
+            font-size: 18px;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .search-form {
+                max-width: 90%;
+            }
+            .search-input {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            .search-button {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body class="position-relative">
+
+    <!-- Navbar incluir -->
+    <div id="navbar-placeholder"></div>
+
+    <div>
+        <!-- Sección Hero -->
+        <div class="hero-section">
+            <!-- Carrusel -->
+            <div id="carruselFondo" class="carousel slide carousel-fade h-100">
+                <div class="carousel-inner h-100">
+                    <div class="carousel-item active h-100">
+                        <img src="../assets/images/fondo1.jpg" class="d-block w-100 h-100 object-fit-cover"
+                            alt="Destino 1">
+                    </div>
+                    <div class="carousel-item h-100">
+                        <img src="../assets/images/fondo2.jpg" class="d-block w-100 h-100 object-fit-cover"
+                            alt="Destino 2">
+                    </div>
+                    <div class="carousel-item h-100">
+                        <img src="../assets/images/fondo3.jpg" class="d-block w-100 h-100 object-fit-cover"
+                            alt="Destino 3">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Texto sobre el carrusel -->
+            <div id="texto">
+                <h1 class="text-center mb-3 text-white">Conoce el mundo</h1>
+                <h2 id="arriba" class="text-center mb-4 text-white">Desde escapadas locales hasta aventuras lejanas,
+                    encuentra lo que te <br>
+                    hace feliz en cualquier momento y en cualquier lugar.</h2>
+            </div>
+
+            <!-- Buscador -->
+            <div id="buscador" class="search-container">
+                <form action="actividades.html" method="get" class="search-form">
+                    <div class="search-box">
+                        <input type="text" placeholder="Busca tu próximo destino..." name="busqueda" class="search-input">
+                        <button type="submit" class="search-button">
+                            <i class="bi bi-search"></i> Buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Alejandro -->
+        <br>
+        <br>
+        <!-- ¿Por qué elegirnos? -->
+        <h3 class="fw-bold mb-4 p-5 m-5">¿Por qué elegirnos?</h3>
+        <div class="row text-center mb-5">
+
+            <div class="col-md-3">
+                <img src="https://img.icons8.com/ios-filled/50/money.png" alt="Flexibilidad" class="icono">
+                <h6 class="fw-semibold">Máxima flexibilidad</h6>
+                <p>Lorem ipsum dolor sit amet consectetur.</p>
+            </div>
+
+            <div class="col-md-3">
+                <img src="https://img.icons8.com/ios-filled/50/hot-air-balloon.png" alt="Experiencias" class="icono">
+                <h6 class="fw-semibold">Experiencias memorables</h6>
+                <p>Lorem ipsum dolor sit amet consectetur.</p>
+            </div>
+
+            <div class="col-md-3">
+                <img src="https://img.icons8.com/ios-filled/50/diamond.png" alt="Calidad" class="icono">
+                <h6 class="fw-semibold">Calidad</h6>
+                <p>Lorem ipsum dolor sit amet consectetur.</p>
+            </div>
+
+            <div class="col-md-3">
+                <img src="https://img.icons8.com/ios-filled/50/support.png" alt="Soporte" class="icono">
+                <h6 class="fw-semibold">Buen soporte</h6>
+                <p>Lorem ipsum dolor sit amet consectetur.</p>
+            </div>
+
+        </div>
+
+        <!-- Destinos destacados -->
+        <h3 class="fw-bold mb-4 p-5 m-5">Destinos destacados</h3>
+
+        <!-- puntos -->
+        <div class="destinos-carousel">
+            <!-- Contenedor de los items -->
+            <div class="carousel-track p-5 m-5" id="carouselTrack">
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/paris.jpg" class="rounded-circle mb-2 destino-img" alt="París">
+                    <p class="mb-0 fw-semibold">París</p>
+                    <small>100+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/singapoure.jpg" class="rounded-circle mb-2 destino-img" alt="Singapore">
+                    <p class="mb-0 fw-semibold">Singapore</p>
+                    <small>300+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/roma.jpg" class="rounded-circle mb-2 destino-img" alt="Roma">
+                    <p class="mb-0 fw-semibold">Roma</p>
+                    <small>400+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/bangkok.jpg" class="rounded-circle mb-2 destino-img" alt="Bangkok">
+                    <p class="mb-0 fw-semibold">Bangkok</p>
+                    <small>100+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/bali.jpg" class="rounded-circle mb-2 destino-img" alt="Bali">
+                    <p class="mb-0 fw-semibold">Bali</p>
+                    <small>600+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/paris.jpg" class="rounded-circle mb-2 destino-img" alt="París">
+                    <p class="mb-0 fw-semibold">París</p>
+                    <small>100+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/singapoure.jpg" class="rounded-circle mb-2 destino-img" alt="Singapore">
+                    <p class="mb-0 fw-semibold">Singapore</p>
+                    <small>300+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/roma.jpg" class="rounded-circle mb-2 destino-img" alt="Roma">
+                    <p class="mb-0 fw-semibold">Roma</p>
+                    <small>400+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/bangkok.jpg" class="rounded-circle mb-2 destino-img" alt="Bangkok">
+                    <p class="mb-0 fw-semibold">Bangkok</p>
+                    <small>100+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/bali.jpg" class="rounded-circle mb-2 destino-img" alt="Bali">
+                    <p class="mb-0 fw-semibold">Bali</p>
+                    <small>600+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/paris.jpg" class="rounded-circle mb-2 destino-img" alt="París">
+                    <p class="mb-0 fw-semibold">París</p>
+                    <small>100+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/paris.jpg" class="rounded-circle mb-2 destino-img" alt="París">
+                    <p class="mb-0 fw-semibold">París</p>
+                    <small>100+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/paris.jpg" class="rounded-circle mb-2 destino-img" alt="París">
+                    <p class="mb-0 fw-semibold">París</p>
+                    <small>100+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/paris.jpg" class="rounded-circle mb-2 destino-img" alt="París">
+                    <p class="mb-0 fw-semibold">París</p>
+                    <small>100+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/paris.jpg" class="rounded-circle mb-2 destino-img" alt="París">
+                    <p class="mb-0 fw-semibold">París</p>
+                    <small>100+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/singapoure.jpg" class="rounded-circle mb-2 destino-img" alt="Singapore">
+                    <p class="mb-0 fw-semibold">Singapore</p>
+                    <small>300+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/roma.jpg" class="rounded-circle mb-2 destino-img" alt="Roma">
+                    <p class="mb-0 fw-semibold">Roma</p>
+                    <small>400+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/bangkok.jpg" class="rounded-circle mb-2 destino-img" alt="Bangkok">
+                    <p class="mb-0 fw-semibold">Bangkok</p>
+                    <small>100+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/bali.jpg" class="rounded-circle mb-2 destino-img" alt="Bali">
+                    <p class="mb-0 fw-semibold">Bali</p>
+                    <small>600+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/singapoure.jpg" class="rounded-circle mb-2 destino-img" alt="Singapore">
+                    <p class="mb-0 fw-semibold">Singapore</p>
+                    <small>300+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/roma.jpg" class="rounded-circle mb-2 destino-img" alt="Roma">
+                    <p class="mb-0 fw-semibold">Roma</p>
+                    <small>400+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/bangkok.jpg" class="rounded-circle mb-2 destino-img" alt="Bangkok">
+                    <p class="mb-0 fw-semibold">Bangkok</p>
+                    <small>100+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/bali.jpg" class="rounded-circle mb-2 destino-img" alt="Bali">
+                    <p class="mb-0 fw-semibold">Bali</p>
+                    <small>600+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/singapoure.jpg" class="rounded-circle mb-2 destino-img" alt="Singapore">
+                    <p class="mb-0 fw-semibold">Singapore</p>
+                    <small>300+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/roma.jpg" class="rounded-circle mb-2 destino-img" alt="Roma">
+                    <p class="mb-0 fw-semibold">Roma</p>
+                    <small>400+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/bangkok.jpg" class="rounded-circle mb-2 destino-img" alt="Bangkok">
+                    <p class="mb-0 fw-semibold">Bangkok</p>
+                    <small>100+ Tours</small>
+                </div>
+
+                <div class="col-auto text-center destino-item">
+                    <img src="../assets/images/bali.jpg" class="rounded-circle mb-2 destino-img" alt="Bali">
+                    <p class="mb-0 fw-semibold">Bali</p>
+                    <small>600+ Tours</small>
+                </div>
+            </div>
+
+            <!-- Contenedor de los puntos indicadores -->
+            <div class="carousel-dots" id="carouselDots"></div>
+        </div>
+
+        <br>
+        <br>
+        <!-- Alejandro fin -->
+
+        <!-- Sección Tours -->
+        <div id="tours" class="container py-5">
+            <h2 class="text-center mb-4">Encuentra tours populares</h2>
+            <br>
+            <div class="row justify-content-center">
+                <!-- Tarjeta 1 -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="location">Paris, Francia</span>
+                                <div>★ 4.8 (243)</div>
+                            </div>
+                            <h5 class="card-title">Ven y disfruta en la ciudad del amor.</h5>
+                            <div class="d-flex justify-content-between mt-3">
+                                <span>4 días</span>
+                                <span class="fw-bold">$189.25</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2 -->
+                <div class="col-md-5 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="location ">New York, USA</span>
+                                <div class="">★ 4.8 (243)</div>
+                            </div>
+                            <h5 class="card-title">Recorre la gran manzana y da un paseo por central park.</h5>
+                            <div class="d-flex justify-content-between mt-3">
+                                <span>4 días</span>
+                                <span class="fw-bold">$225</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 3 -->
+                <div class="col-md-5 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="location ">London, UK</span>
+                                <div class="">★ 4.8 (243)</div>
+                            </div>
+                            <h5 class="card-title">Visita el museo británico y conoce el palacio de Buckingham</h5>
+                            <div class="d-flex justify-content-between mt-3">
+                                <span>4 días</span>
+                                <span class="fw-bold">$943</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- tarjeta 4 -->
+                <div class="col-md-5 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class=" location">New York, USA</span>
+                                <div class="">★ 4.8 (243)</div>
+                            </div>
+                            <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                            <div class="d-flex justify-content-between mt-3">
+                                <span>4 días</span>
+                                <span class="fw-bold">$771</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 5 -->
+                <div class="col-md-5 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="location">Paris, Francia</span>
+                                <div class="">★ 4.8 (243)</div>
+                            </div>
+                            <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                            <div class="d-flex justify-content-between mt-3">
+                                <span>4 días</span>
+                                <span class="fw-bold">$189.25</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 6 -->
+                <div class="col-md-5 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="location">New York, USA</span>
+                                <div class="">★ 4.8 (243)</div>
+                            </div>
+                            <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                            <div class="d-flex justify-content-between mt-3">
+                                <span>4 días</span>
+                                <span class="fw-bold">$225</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 7 -->
+                <div class="col-md-5 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="location">London, UK</span>
+                                <div class="">★ 4.8 (243)</div>
+                            </div>
+                            <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                            <div class="d-flex justify-content-between mt-3">
+                                <span>4 días</span>
+                                <span class="fw-bold">$943</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 8 -->
+                <div class="col-md-5 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="location">New York, USA</span>
+                                <div class="">★ 4.8 (243)</div>
+                            </div>
+                            <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                            <div class="d-flex justify-content-between mt-3">
+                                <span>4 días</span>
+                                <span class="fw-bold">$771</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button id="verMasBtn" class="btn px-4 py-2">
+                        Ver todo ▼
+                    </button>
+                </div>
+                <br>
+                <div id="masTours" class="row justify-content-center" style="display: none;">
+                </div>
+            </div>
+
+            <div class="promo-wrapper">
+    <section class="promo-section">
+        <div class="promo-text">
+            <h1>Consigue hasta un 35% de descuento<br>en tu destino favorito</h1>
+            <p>Oferta por tiempo limitado, ¡no pierdas la oportunidad!</p>
+            <a href="lista.php" class="btn btn-lg">Reserva ahora</a>
+        </div>
+        <div class="promo-image"></div>
+    </section>
+</div>
+
+            <!-- Updated Cosas populares para hacer Section -->
+            <section class="container py-5">
+                <h2 class="text-center mb-4">Cosas populares para hacer</h2>
+                <div class="gallery-container">
+                    <div class="gallery">
+                        <div class="card" style="width: 200px; display: inline-block;" onclick="openModal('Cruceros')">
+                            <img src="/Viajes/assets/images/bali.jpg" class="card-img-top" alt="Cruceros" style="height: 150px; object-fit: cover;">
+                            <div class="card-body text-center">
+                                <span class="lugares">Cruceros</span>
+                            </div>
+                        </div>
+                        <div class="card" style="width: 200px; display: inline-block;" onclick="openModal('Tours de playa')">
+                            <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tours de playa" style="height: 150px; object-fit: cover;">
+                            <div class="card-body text-center">
+                                <span class="lugares">Tours de playa</span>
+                            </div>
+                        </div>
+                        <div class="card" style="width: 200px; display: inline-block;" onclick="openModal('Visitas a la ciudad')">
+                            <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Visitas a la ciudad" style="height: 150px; object-fit: cover;">
+                            <div class="card-body text-center">
+                                <span class="lugares">Visitas a la ciudad</span>
+                            </div>
+                        </div>
+                        <div class="card" style="width: 200px; display: inline-block;" onclick="openModal('Museos')">
+                            <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Museos" style="height: 150px; object-fit: cover;">
+                            <div class="card-body text-center">
+                                <span class="lugares">Museos</span>
+                            </div>
+                        </div>
+                        <div class="card" style="width: 200px; display: inline-block;" onclick="openModal('Comida')">
+                            <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Comida" style="height: 150px; object-fit: cover;">
+                            <div class="card-body text-center">
+                                <span class="lugares">Comida</span>
+                            </div>
+                        </div>
+                        <div class="card" style="width: 200px; display: inline-block;" onclick="openModal('Campamentos')">
+                            <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Campamentos" style="height: 150px; object-fit: cover;">
+                            <div class="card-body text-center">
+                                <span class="lugares">Campamentos</span>
+                            </div>
+                        </div>
+                        <!-- Removed duplicate Campamentos cards for brevity -->
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div id="modal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal()">×</span>
+                        <div class="modal-body">
+                            <div class="modal-text" id="modal-text">
+                                <!-- Dynamic content will be inserted here -->
+                            </div>
+                            <div class="modal-image">
+                                <img id="modal-img" src="" alt="Actividad" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PRINCIPALES TENDENCIAS -->
+            <h2 class="text-center mb-4">Principales tendencias</h2>
+            <br>
+
+            <!-- Contenedor Principal -->
+            <div class="destinos-carousel-container position-relative py-4">
+                <!-- Flechas de Navegación -->
+                <button class="carousel-control prev bg-white rounded-circle shadow-sm">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+
+                <!-- Contenedor del Carrusel -->
+                <div class="destinos-carousel-track" id="carouselTrack">
+                    <!-- Grupo de Tarjetas - Slide 1 -->
+                    <div class="carousel-slide d-flex">
+                        <!-- Tarjeta 1 -->
+                        <div class="carousel-card mx-2">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <img src="../assets/images/paris.jpg" class="card-img-top" alt="París"
+                                    style="height: 180px; object-fit: cover;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="location">Paris, Francia</span>
+                                        <div>★ 4.8 (243)</div>
+                                    </div>
+                                    <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <span>4 días</span>
+                                        <span class="fw-bold">$189.25</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 2 -->
+                        <div class="carousel-card mx-2">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <img src="../assets/images/paris.jpg" class="card-img-top" alt="París"
+                                    style="height: 180px; object-fit: cover;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="location">Paris, Francia</span>
+                                        <div>★ 4.8 (243)</div>
+                                    </div>
+                                    <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <span>4 días</span>
+                                        <span class="fw-bold">$189.25</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 3 -->
+                        <div class="carousel-card mx-2">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <img src="../assets/images/paris.jpg" class="card-img-top" alt="París"
+                                    style="height: 180px; object-fit: cover;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="location">Paris, Francia</span>
+                                        <div>★ 4.8 (243)</div>
+                                    </div>
+                                    <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <span>4 días</span>
+                                        <span class="fw-bold">$189.25</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-slide d-flex">
+                        <!-- Tarjeta 4 -->
+                        <div class="carousel-card mx-2">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <img src="../assets/images/paris.jpg" class="card-img-top" alt="París"
+                                    style="height: 180px; object-fit: cover;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="location">Paris, Francia</span>
+                                        <div>★ 4.8 (243)</div>
+                                    </div>
+                                    <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <span>4 días</span>
+                                        <span class="fw-bold">$189.25</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 5 -->
+                        <div class="carousel-card mx-2">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <img src="../assets/images/paris.jpg" class="card-img-top" alt="París"
+                                    style="height: 180px; object-fit: cover;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="location">Paris, Francia</span>
+                                        <div>★ 4.8 (243)</div>
+                                    </div>
+                                    <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <span>4 días</span>
+                                        <span class="fw-bold">$189.25</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 6 -->
+                        <div class="carousel-card mx-2">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <img src="../assets/images/paris.jpg" class="card-img-top" alt="París"
+                                    style="height: 180px; object-fit: cover;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="location">Paris, Francia</span>
+                                        <div>★ 4.8 (243)</div>
+                                    </div>
+                                    <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <span>4 días</span>
+                                        <span class="fw-bold">$189.25</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- Cierre del Slide 2 -->
+
+                    <!-- === SLIDE 3 === (tercer grupo) -->
+                    <div class="carousel-slide d-flex">
+                        <!-- Tarjeta 7 -->
+                        <div class="carousel-card mx-2">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <img src="../assets/images/paris.jpg" class="card-img-top" alt="París"
+                                    style="height: 180px; object-fit: cover;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="location">Paris, Francia</span>
+                                        <div>★ 4.8 (243)</div>
+                                    </div>
+                                    <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <span>4 días</span>
+                                        <span class="fw-bold">$189.25</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 8 -->
+                        <div class="carousel-card mx-2">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <img src="../assets/images/paris.jpg" class="card-img-top" alt="París"
+                                    style="height: 180px; object-fit: cover;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="location">Paris, Francia</span>
+                                        <div>★ 4.8 (243)</div>
+                                    </div>
+                                    <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <span>4 días</span>
+                                        <span class="fw-bold">$189.25</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 9 -->
+                        <div class="carousel-card mx-2">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <img src="../assets/images/paris.jpg" class="card-img-top" alt="París"
+                                    style="height: 180px; object-fit: cover;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="location">Paris, Francia</span>
+                                        <div>★ 4.8 (243)</div>
+                                    </div>
+                                    <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <span>4 días</span>
+                                        <span class="fw-bold">$189.25</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- Cierre del track -->
+
+                <!-- Flecha siguiente -->
+                <button class="carousel-control next bg-white rounded-circle shadow-sm">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+
+                <!-- Indicadores con Puntos -->
+                <div class="carousel-dots mt-4"></div>
+            </div>
+
+            <!-- DESCUENTO -->
+            <div id="descuento" class="justify-content-center p-5">
+                <h2>Consigue un 5% de descuento en tu</h2>
+                <h2>primera reserva</h2>
+                <br>
+                <p>Animate a conocer las islas Galapagos ¡Es tu oportunidad!</p>
+                <br>
+                <p>Recibe un enlace enviado a tu correo electrónico</p>
+
+                <form name="Descuento5" id="formDescuento">
+                    <input type="email" id="correo" placeholder="Email" class="form-control w-50 d-inline" required>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                    <div class="invalid-feedback" style="display:none; color:red;">
+                        Por favor, ingresa un correo válido.
+                    </div>
+                    <br>
+                </form>
+            </div>
+
+            <!-- Modal de Agradecimiento -->
+        </div>
+
+        <div class="modal fade" id="modalGracias" tabindex="-1" aria-labelledby="modalGraciasLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalGraciasLabel">¡Gracias!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        Te hemos enviado el enlace a tu correo electrónico.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer include -->
+        <div id="footer-placeholder"></div>
+
+        <!-- Bootstrap JS -->
+        <script src="../assets/js/bootstrap.bundle.min.js"></script>
+
+        <!-- JS para incluir navbar y footer -->
+        <script>
+            fetch('../includes/navbar.html')
+                .then(res => res.text())
+                .then(html => document.getElementById('navbar-placeholder').innerHTML = html);
+
+            fetch('../includes/footer.html')
+                .then(res => res.text())
+                .then(html => document.getElementById('footer-placeholder').innerHTML = html);
+        </script>
+
+        <!-- puntos funcionalidad -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script>
+            const form = document.getElementById('formDescuento');
+            const correoInput = document.getElementById('correo');
+            const modalGracias = new bootstrap.Modal(document.getElementById('modalGracias'));
+            const errorFeedback = document.querySelector('.invalid-feedback');
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const correo = correoInput.value.trim();
+                const esValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+
+                if (esValido) {
+                    errorFeedback.style.display = 'none';
+                    modalGracias.show();
+                    form.reset();
+                } else {
+                    errorFeedback.style.display = 'block';
+                }
+            });
+        </script>
+
+        <script>
+            // Funcionalidad de desplegables
+            document.querySelectorAll('.filter-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const section = header.parentElement;
+                    section.classList.toggle('active');
+
+                    const icon = header.querySelector('i');
+                    if (section.classList.contains('active')) {
+                        icon.classList.remove('bi-chevron-down');
+                        icon.classList.add('bi-chevron-up');
+                    } else {
+                        icon.classList.remove('bi-chevron-up');
+                        icon.classList.add('bi-chevron-down');
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const track = document.getElementById('carouselTrack');
+                const dotsContainer = document.getElementById('carouselDots');
+                const items = document.querySelectorAll('.destino-item');
+
+                // Calcular cuántos slides/puntos necesitamos
+                const itemWidth = items[0].offsetWidth;
+                const containerWidth = track.offsetWidth;
+                const itemsPerSlide = Math.floor(containerWidth / (itemWidth + 20)); // 20 es el gap
+
+                const slideCount = Math.ceil(items.length / itemsPerSlide);
+
+                // Crear los puntos indicadores
+                for (let i = 0; i < slideCount; i++) {
+                    const dot = document.createElement('button');
+                    dot.classList.add('carousel-dot');
+                    if (i === 0) dot.classList.add('active');
+
+                    dot.addEventListener('click', () => {
+                        goToSlide(i);
+                    });
+
+                    dotsContainer.appendChild(dot);
+                }
+
+                // Función para mover a un slide específico
+                function goToSlide(slideIndex) {
+                    const scrollPosition = slideIndex * containerWidth;
+                    track.scrollTo({
+                        left: scrollPosition,
+                        behavior: 'smooth'
+                    });
+
+                    // Actualizar puntos activos
+                    document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+                        dot.classList.toggle('active', index === slideIndex);
+                    });
+                }
+
+                // Opcional: Actualizar puntos automáticamente al hacer scroll
+                track.addEventListener('scroll', () => {
+                    const currentSlide = Math.round(track.scrollLeft / containerWidth);
+                    document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+                        dot.classList.toggle('active', index === currentSlide);
+                    });
+                });
+            });
+        </script>
+
+        <!-- Tarjeta de ARTICULOS DE VIAJE -->
+        <script>
+            function openModal(title) {
+                document.getElementById("modal").style.display = "flex";
+                let content = '';
+                let imageSrc = '../assets/images/paisaje.jpg'; // Default image
+
+                switch (title) {
+                    case 'Cruceros':
+                        content = `
+                            <h2>${title}</h2>
+                            <p><strong>Destino:</strong> Bali</p>
+                            <p>Disfruta de un crucero inolvidable por las cristalinas aguas de Bali, con vistas espectaculares y experiencias únicas.</p>
+                            <ul>
+                                <li>Crucero al atardecer</li>
+                                <li>Excursión a islas privadas</li>
+                                <li>Comida a bordo</li>
+                            </ul>
+                        `;
+                        imageSrc = '/Viajes/assets/images/bali.jpg';
+                        break;
+                    case 'Tours de playa':
+                        content = `
+                            <h2>${title}</h2>
+                            <p><strong>Destino:</strong> Bali</p>
+                            <p>Relájate en las playas de arena blanca de Bali con tours que incluyen actividades acuáticas y relajación.</p>
+                            <ul>
+                                <li>Snorkeling</li>
+                                <li>Lecciones de surf</li>
+                                <li>Paseo en kayak</li>
+                            </ul>
+                        `;
+                        imageSrc = '../assets/images/paisaje.jpg';
+                        break;
+                    case 'Visitas a la ciudad':
+                        content = `
+                            <h2>${title}</h2>
+                            <p><strong>Destino:</strong> París</p>
+                            <p>Explora las ciudades más icónicas con visitas guiadas a monumentos y lugares históricos.</p>
+                            <ul>
+                                <li>Visita a la Torre Eiffel</li>
+                                <li>Paseo por el Louvre</li>
+                                <li>Recorrido en barco por el Sena</li>
+                            </ul>
+                        `;
+                        imageSrc = '../assets/images/paris.jpg';
+                        break;
+                    case 'Museos':
+                        content = `
+                            <h2>${title}</h2>
+                            <p><strong>Destino:</strong> Roma</p>
+                            <p>Sumérgete en la cultura y la historia con visitas a los museos más prestigiosos del mundo.</p>
+                            <ul>
+                                <li>Museo del Vaticano</li>
+                                <li>Galería Uffizi</li>
+                                <li>Museo Británico</li>
+                            </ul>
+                        `;
+                        imageSrc = '../assets/images/roma.jpg';
+                        break;
+                    case 'Comida':
+                        content = `
+                            <h2>${title}</h2>
+                            <p><strong>Destino:</strong> Bangkok</p>
+                            <p>Descubre la gastronomía local con tours que incluyen mercados y restaurantes auténticos.</p>
+                            <ul>
+                                <li>Clase de cocina tailandesa</li>
+                                <li>Visita a mercados flotantes</li>
+                                <li>Cena en la calle</li>
+                            </ul>
+                        `;
+                        imageSrc = '../assets/images/bangkok.jpg';
+                        break;
+                    case 'Campamentos':
+                        content = `
+                            <h2>${title}</h2>
+                            <p><strong>Destino:</strong> Bali</p>
+                            <p>Vive la aventura al aire libre con campamentos en entornos naturales espectaculares.</p>
+                            <ul>
+                                <li>Campamento en la selva</li>
+                                <li>Excursión nocturna</li>
+                                <li>Fuego de campamento</li>
+                            </ul>
+                        `;
+                        imageSrc = '../assets/images/paisaje.jpg';
+                        break;
+                }
+
+                document.getElementById("modal-text").innerHTML = content;
+                document.getElementById("modal-img").src = imageSrc;
+            }
+
+            function closeModal() {
+                document.getElementById("modal").style.display = "none";
+            }
+
+            // Optional: Close modal when clicking outside the modal content
+            document.addEventListener('DOMContentLoaded', function () {
+                document.getElementById("modal").addEventListener('click', function(event) {
+                    if (event.target === this) {
+                        closeModal();
+                    }
+                });
+            });
+        </script>
+
+        <!-- funcionalidad tarjetas slide -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const track = document.getElementById('carouselTrack');
+                const slides = document.querySelectorAll('.carousel-slide');
+                const prevBtn = document.querySelector('.carousel-control.prev');
+                const nextBtn = document.querySelector('.carousel-control.next');
+                const dotsContainer = document.querySelector('.carousel-dots');
+
+                let currentSlide = 0;
+                const slideCount = slides.length;
+                const cardWidth = document.querySelector('.carousel-card').offsetWidth;
+                const gap = 15;
+
+                // Crear puntos indicadores
+                slides.forEach((_, index) => {
+                    const dot = document.createElement('button');
+                    dot.addEventListener('click', () => goToSlide(index));
+                    dotsContainer.appendChild(dot);
+                });
+
+                const dots = document.querySelectorAll('.carousel-dots button');
+                dots[0].classList.add('active');
+
+                // Función para mover a un slide específico
+                function goToSlide(slideIndex) {
+                    currentSlide = slideIndex;
+                    const offset = -currentSlide * 100;
+                    track.style.transform = `translateX(${offset}%)`;
+
+                    // Actualizar puntos activos
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === currentSlide);
+                    });
+                }
+
+                // Event listeners
+                prevBtn.addEventListener('click', () => {
+                    currentSlide = (currentSlide > 0) ? currentSlide - 1 : slideCount - 1;
+                    goToSlide(currentSlide);
+                });
+
+                nextBtn.addEventListener('click', () => {
+                    currentSlide = (currentSlide < slideCount - 1) ? currentSlide + 1 : 0;
+                    goToSlide(currentSlide);
+                });
+
+                // Autoplay opcional
+                let autoplay = setInterval(() => {
+                    currentSlide = (currentSlide < slideCount - 1) ? currentSlide + 1 : 0;
+                    goToSlide(currentSlide);
+                }, 5000);
+
+                // Pausar autoplay al interactuar
+                track.addEventListener('mouseenter', () => clearInterval(autoplay));
+                track.addEventListener('mouseleave', () => {
+                    autoplay = setInterval(() => {
+                        currentSlide = (currentSlide < slideCount - 1) ? currentSlide + 1 : 0;
+                        goToSlide(currentSlide);
+                    }, 5000);
+                });
+
+                // Ajustar en resize
+                window.addEventListener('resize', () => {
+                    goToSlide(currentSlide);
+                });
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const verMasBtn = document.getElementById('verMasBtn');
+                const masTours = document.getElementById('masTours');
+                let toursCargados = false;
+
+                verMasBtn.addEventListener('click', function () {
+                    if (!toursCargados) {
+                        // Simular cargar los datos
+                        setTimeout(() => {
+                            masTours.innerHTML = `
+                    <!-- Tarjeta 9 -->
+                    <div class="col-md-5 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="location">Paris, Francia</span>
+                                    <div class="">★ 4.8 (243)</div>
+                        </div>
+                        <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                        <div class="d-flex justify-content-between mt-3">
+                                    <span>4 días</span>
+                                    <span class="fw-bold">$189.25</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tarjeta 10 -->
+                    <div class="col-md-5 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="location">New York, USA</span>
+                                    <div class="">★ 4.8 (243)</div>
+                        </div>
+                        <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                        <div class="d-flex justify-content-between mt-3">
+                                    <span>4 días</span>
+                                    <span class="fw-bold">$225</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta 11 -->
+                    <div class="col-md-5 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="location">London, UK</span>
+                                    <div class="">★ 4.8 (243)</div>
+                        </div>
+                        <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                        <div class="d-flex justify-content-between mt-3">
+                                    <span>4 días</span>
+                                    <span class="fw-bold">$943</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta 12 -->
+                    <div class="col-md-5 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="location">Paris, Francia</span>
+                                    <div class="">★ 4.8 (243)</div>
+                        </div>
+                        <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                        <div class="d-flex justify-content-between mt-3">
+                                    <span>4 días</span>
+                                    <span class="fw-bold">$189.25</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tarjeta 13 -->
+                    <div class="col-md-5 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="location">New York, USA</span>
+                                    <div class="">★ 4.8 (243)</div>
+                        </div>
+                        <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                        <div class="d-flex justify-content-between mt-3">
+                                    <span>4 días</span>
+                                    <span class="fw-bold">$225</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta 14 -->
+                    <div class="col-md-5 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="location">London, UK</span>
+                                    <div class="">★ 4.8 (243)</div>
+                        </div>
+                        <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                        <div class="d-flex justify-content-between mt-3">
+                                    <span>4 días</span>
+                                    <span class="fw-bold">$943</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tarjeta 15 -->
+                    <div class="col-md-5 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="location">Paris, Francia</span>
+                                    <div class="">★ 4.8 (243)</div>
+                        </div>
+                        <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                        <div class="d-flex justify-content-between mt-3">
+                                    <span>4 días</span>
+                                    <span class="fw-bold">$189.25</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tarjeta 16 -->
+                    <div class="col-md-5 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            <img src="../assets/images/paisaje.jpg" class="card-img-top" alt="Tour">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="location">New York, USA</span>
+                                    <div class="">★ 4.8 (243)</div>
+                        </div>
+                        <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5>
+                        <div class="d-flex justify-content-between mt-3">
+                                    <span>4 días</span>
+                                    <span class="fw-bold">$225</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                            toursCargados = true;
+                            verMasBtn.textContent = 'Ver menos ▲';
+                            masTours.style.display = 'flex'; // Muestra las nuevas tarjetas
+                        }, 500); // Simula tiempo de carga
+                    } else {
+                        masTours.style.display = 'none';
+                        verMasBtn.textContent = 'Ver todo ▼';
+                        toursCargados = false;
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
