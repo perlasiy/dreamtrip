@@ -1,0 +1,115 @@
+:root {
+    --color-primario: #ffffff;
+    --color-secundario: #9DB496;
+    --color-texto: #333;
+    --color-blanco: #fff;
+    --color-gris: #f5f5f5;
+}
+
+body {
+    color: var(--color-texto);
+    line-height: 1.6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main-header {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--color-texto);
+}
+
+.navbar-nav .nav-link {
+    color: var(--color-texto);
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--color-secundario);
+    border-bottom: 2px solid var(--color-secundario);
+}
+
+.carousel-caption {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-caption h1 {
+    font-size: 3rem;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.carousel-caption a {
+    color: var(--color-blanco);
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.carousel-caption a:hover {
+    color: var(--color-secundario);
+    text-decoration: underline;
+}
+
+.form-container {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.form-image {
+    background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
+    min-height: 400px;
+}
+
+.btn-submit {
+    background-color: var(--color-secundario);
+    color: var(--color-blanco);
+    transition: background-color 0.3s;
+}
+
+.btn-submit:hover {
+    background-color: #8a9e83;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.main-footer {
+    background-color: var(--color-secundario);
+    color: var(--color-texto);
+}
+
+.footer-section h3 {
+    color: var(--color-texto);
+    font-size: 1.2rem;
+}
+
+.footer-section a {
+    color: var(--color-texto);
+    text-decoration: none;
+}
+
+.footer-section a:hover {
+    color: var(--color-blanco);
+}
+
+.footer-bottom {
+    background-color: #000;
+    color: var(--color-blanco);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
